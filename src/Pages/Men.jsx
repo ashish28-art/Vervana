@@ -21,46 +21,11 @@ const Products = () => {
   });
 
   return (
-    <div className="mt-6 flex sticky top-24 ">
-      {/* ---------------- Left Column (Filters) ---------------- */}
-      <motion.div
-        className='w-1/4 mt-40 font-poppins ml-6'
-        initial={{ x: -100, opacity: 0 }}
-        whileInView={{ x: 0, opacity: 1 }}
-        viewport={{ once: true, amount: 0.2 }}
-        transition={{ duration: 0.6 }}
-      >
-        <div className='lg:w-[250px] md;w-[100px]  sticky top-24 mt-12 '>
-          <h1 className='text-xl '>Price</h1>
-          <Slider
-            value={priceRange}
-            onChange={(e, newValue) => setPriceRange(newValue)}
-            valueLabelDisplay="off"
-            min={0}
-            max={2000}
-            sx={{
-              "& .MuiSlider-thumb": {
-                width: 14,
-                height: 14,
-                backgroundColor: "black",
-              },
-              "& .MuiSlider-thumb:hover": {
-                boxShadow: "0 0 0 6px rgba(0,0,0,0.16)",
-              },
-            }}
-          />
-          <div className="flex justify-between mt-2 text-sm font-medium text-gray-700">
-            <span>₹{priceRange[0]}</span>
-            <span>₹{priceRange[1]}</span>
-          </div>
-          
-          
-         
-        </div>
-      </motion.div>
+    <div className="mt-6 flex justify-center sticky top-24 ">
+      
 
       {/* ---------------- Right Column (Products + Categories) ---------------- */}
-      <div className="w-3/4 p-6">
+      <div className="w-100 p-6">
         <motion.h1
           className="heading font-poppins text-2xl mb-6"
           initial={{ y: -30, opacity: 0 }}
@@ -72,7 +37,7 @@ const Products = () => {
         </motion.h1>
 
         {/* Category Buttons */}
-        <div className="flex flex-wrap gap-3 mb-6 justify-center">
+        <div className="flex flex-wrap gap-4 mb-6 justify-center">
           {["All", "T-Shirts", "Shirts", "Hoodies", "Jeans"].map((category, idx) => (
             <motion.button
               key={category}
@@ -93,7 +58,7 @@ const Products = () => {
 
 
         {/* Products Grid */}
-        <div className="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+        <div className="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-20 px-20">
           {filteredItems.map((item, index) => (
             <motion.div
               key={item.id}
