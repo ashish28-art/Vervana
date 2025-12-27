@@ -1,11 +1,10 @@
-import React from "react";
+
 import main from "../assets/main.jpg";
-import { Favourites } from "./Data/Favourites.js";
 import Footer from "./ Footer.jsx";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-import { useRef } from "react";
+import { useRef, useState, useEffect } from "react";
 
 
 const categories = [
@@ -13,7 +12,7 @@ const categories = [
     title: "Shirts",
     image:
       "https://www.urbanofashion.com/cdn/shop/files/shirtsolreg-01-white.jpg?v=1738593655",
-     
+
   },
   {
     title: "Tshirts",
@@ -33,16 +32,32 @@ const categories = [
 ];
 
 const Home = () => {
-  const navigate=useNavigate();
+  const [favourites, setFavourites] = useState([]);
+  useEffect(() => {
+    Promise.all([
+      fetch("https://dummyjson.com/products/category/mens-shirts").then(res => res.json()),
+      fetch("https://dummyjson.com/products/category/womens-dresses").then(res => res.json()),
+      fetch("https://dummyjson.com/products/category/tops").then(res => res.json()),
+    ])
+      .then((results) => {
+        const clothesOnly = results.flatMap(r => r.products);
+        setFavourites(clothesOnly);
+      })
+      .catch((err) => console.error(err));
+  }, []);
+  
+
+
+  const navigate = useNavigate();
   const categoryRef = useRef(null);
 
   const handleScrollToCategories = () => {
     categoryRef.current?.scrollIntoView({ behavior: "smooth" });
   };
-  const handleCategory=(title)=>{
-    if(["Shirts","Tshirts"].includes(title)){
+  const handleCategory = (title) => {
+    if (["Shirts", "Tshirts"].includes(title)) {
       navigate("/men");
-    }else{
+    } else {
       navigate("/women")
     }
 
@@ -54,20 +69,21 @@ const Home = () => {
         <img src={main} alt="Main banner" className="w-full h-full object-cover" />
         <div className="absolute inset-0 flex flex-col items-center justify-center text-white bg-black/30 text-center px-4">
           <motion.h1
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, ease: "easeOut" }}
-            viewport={{ once: false, amount: 0.3 }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.25, ease: "easeOut" }}
+            viewport={{ once: true }}
             className="text-4xl md:text-6xl font-bold mb-4 font-poppins"
           >
             Shop the best deals
           </motion.h1>
 
+
           <motion.p
             initial={{ opacity: 0, y: 40 }}
             whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1, delay: 0.2, ease: "easeOut" }}
-            viewport={{ once: false, amount: 0.3 }}
+            transition={{ duration: 0.5, delay: 0.5, ease: "easeOut" }}
+            viewport={{ once: true }}
             className="text-lg md:text-2xl mb-6 font-poppins"
           >
             Your one-stop shop for style and comfort
@@ -78,7 +94,7 @@ const Home = () => {
             initial={{ opacity: 0, y: 50 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, delay: 0.4, ease: "easeOut" }}
-            viewport={{ once: false, amount: 0.3 }}
+            viewport={{ once: true }}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             className="px-6 py-3 bg-teal-700 hover:bg-teal-800 text-white rounded-lg text-lg font-semibold font-inter"
@@ -89,12 +105,12 @@ const Home = () => {
       </div>
 
       {/* CATEGORIES SECTION */}
-      <section ref={categoryRef}  className="category w-full py-10">
+      <section ref={categoryRef} className="category w-full py-10">
         <motion.h1
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7 }}
-          viewport={{ once: false, amount: 0.2 }}
+          viewport={{ once: true }}
           className="flex justify-center font-poppins font-normal text-3xl"
         >
           Shop by category
@@ -104,7 +120,7 @@ const Home = () => {
           {categories.map((category, index) => (
             <motion.div
               key={index}
-              onClick={()=>handleCategory(categories.title)}
+              onClick={() => handleCategory(category.title)}
               initial={{ opacity: 0, scale: 0.8 }}
               whileInView={{ opacity: 1, scale: 1 }}
               transition={{
@@ -112,7 +128,7 @@ const Home = () => {
                 delay: index * 0.1,
                 ease: "easeOut",
               }}
-              viewport={{ once: false, amount: 0.2 }}
+              viewport={{ once: true }}
               className="item w-[160px] sm:w-[190px] md:w-[250px] rounded-lg cursor-pointer"
             >
               <div className="overflow-hidden rounded-lg">
@@ -136,7 +152,7 @@ const Home = () => {
           initial={{ opacity: 0, y: 40 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7 }}
-          viewport={{ once: false, amount: 0.2 }}
+          viewport={{ once: true }}
           className="font-poppins font-medium text-3xl text-center mb-3"
         >
           Vervana Favourites
@@ -146,7 +162,7 @@ const Home = () => {
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           transition={{ duration: 1 }}
-          viewport={{ once: false, amount: 0.2 }}
+          viewport={{ once: true }}
           className="font-poppins mb-10 text-center text-gray-600"
         >
           Beautifully Functional. Purposefully Designed. Consciously Crafted.
@@ -154,9 +170,9 @@ const Home = () => {
 
         <div className="Favourites w-full overflow-x-auto scrollbar-hide">
           <div className="flex gap-6 px-4">
-            {Favourites.map((item, index) => (
+            {favourites.map((item, index) => (
               <motion.div
-                key={index}
+                key={item.id}
                 initial={{ opacity: 0, y: 50 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{
@@ -164,24 +180,28 @@ const Home = () => {
                   delay: index * 0.1,
                   ease: "easeOut",
                 }}
-                viewport={{ once: false, amount: 0.2 }}
+                viewport={{ once: true }}
                 className="fav flex-shrink-0 w-[170px] sm:w-[190px] md:w-[260px] rounded-lg overflow-hidden group"
               >
-                <Link to={`/fav/${item.id}`}>
+                <Link to={`/product/${item.id}`}
+                  state={{ source: "dummyjson" }}>
                   <div className="w-full h-56 rounded-lg overflow-hidden">
                     <img
-                      src={item.img}
-                      alt={item.name}
-                      className="w-full h-full object-cover"
+                      src={item.thumbnail }
+                      alt={item.title}
                     />
+
                   </div>
                 </Link>
 
                 <p className="mt-3 text-center font-poppins font-medium">
                   {item.title}
                 </p>
-                <p className="text-center text-gray-600 text-sm">{item.price}</p>
+                <p className="text-center text-gray-600 text-sm">
+                  ${item.price}
+                </p>
               </motion.div>
+
             ))}
           </div>
         </div>

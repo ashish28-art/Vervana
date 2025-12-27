@@ -8,8 +8,18 @@ export const WishlistProvider = ({ children }) => {
 
  
   const addToWishlist = (item) => {
-    setWishlistItems((prev) => [...prev, item]);
+    const exists=wishlistItems.some((i)=>i.id===item.id);
+    if(exists){
+      setWishlistItems((prev) => prev.filter((i) => i.id !== item.id));
+    }
+    else{
+      setWishlistItems((prev) => [...prev, item]);
+    }
+
+   
   };
+
+  
 
   
   const removeFromWishlist = (id) => {

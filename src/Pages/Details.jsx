@@ -1,5 +1,5 @@
-import React, { useState, useContext } from "react";
-import { Items } from "./Data/Items";
+import React, { useState, useContext,useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import { CartContext } from "../Context/CartContext";
 import { WishlistContext } from "../Context/WishlistContext";
@@ -7,13 +7,30 @@ import { WishlistContext } from "../Context/WishlistContext";
 const Details = () => {
   const { addToWishlist } = useContext(WishlistContext);
   const { addToCart } = useContext(CartContext);
+  const location=useLocation();
+  const source = location.state?.source || "platzi";
   const { id } = useParams();
-  const product = Items.find((p) => p.id.toString() === id);
-
-  if (!product) return <h2 className="text-center mt-10 text-xl">Product not found</h2>;
-
+  const [product,setProduct]=useState(null);
   const [selectedSize, setSelectedSize] = useState(null);
   const sizes = ["XS", "S", "M", "L", "XL"];
+
+  useEffect(() => {
+    let url = "";
+
+    if (source === "dummyjson") {
+      url = `https://dummyjson.com/products/${id}`;
+    } else {
+      url = `https://api.escuelajs.co/api/v1/products/${id}`;
+    }
+
+    fetch(url)
+      .then((res) => res.json())
+      .then((data) => setProduct(data))
+      .catch((err) => console.error(err));
+  }, [id, source]);
+  
+
+  if (!product) return <h2 className="text-center mt-10 text-xl">Loading...</h2>;
 
   const handleAddToCart = () => {
     if (!selectedSize) {
@@ -22,9 +39,9 @@ const Details = () => {
     }
     addToCart({
       id: product.id,
-      name: product.name,
+      name: product.title,
       price: product.price,
-      img: product.img,
+      img: product.images[0],
       size: selectedSize,
     });
   };
@@ -34,15 +51,15 @@ const Details = () => {
       {/* LEFT: Product Image */}
       <div className="w-full md:w-1/2 flex justify-center">
         <img
-          src={product.img}
-          alt={product.name}
+          src={source === "dummyjson" ? product.thumbnail : product.images?.[0]}
+          alt={product.title}
           className="w-[280px] sm:w-[350px] md:w-[400px] lg:w-[450px] h-auto object-cover rounded-xl shadow-lg"
         />
       </div>
 
       {/* RIGHT: Product Details */}
       <div className="w-full md:w-1/2 flex flex-col justify-start space-y-6 mt-8 md:mt-12 font-poppins">
-        <h2 className="text-2xl sm:text-3xl font-medium">{product.name}</h2>
+        <h2 className="text-2xl sm:text-3xl font-medium">{product.title}</h2>
 
         {/* Sizes */}
         <div className="flex flex-wrap gap-3 mt-2">
@@ -76,7 +93,7 @@ const Details = () => {
           ))}
         </div>
 
-        <p className="text-2xl font-semibold text-gray-800">{product.price}</p>
+        <p className="text-2xl font-semibold text-gray-800">${product.price}</p>
 
         <p className="text-gray-600 leading-relaxed text-sm sm:text-base">
           This is a high-quality product designed for comfort and style. Perfect for your daily wear.
@@ -123,18 +140,12 @@ const Details = () => {
         <div>
           <h1 className="text-xl sm:text-2xl mb-2 font-medium">Product Details</h1>
 
-          <h2 className="text-lg font-medium">Material</h2>
-          <p className="text-gray-600 mb-3">{product.Material}</p>
+          
+          <p className="text-gray-600 mb-3">{product.description}</p>
 
-          <h2 className="text-lg font-medium">Fit</h2>
-          <p className="text-gray-600 mb-3">{product.Fit}</p>
+          
 
-          <h2 className="text-lg font-medium mb-2">Features</h2>
-          <ul className="text-gray-600 space-y-1 text-sm sm:text-base">
-            {product.Features.map((line, index) => (
-              <li key={index}>• {line}</li>
-            ))}
-          </ul>
+          
         </div>
 
         <hr className="border-gray-300" />

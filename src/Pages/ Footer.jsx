@@ -12,11 +12,11 @@ const Footer = () => {
 
         </div>
         <div className='icons flex gap-8 justify-center mt-8'>
-          <a href="#" class="text-gray-600 hover:text-blue-600">
+          <a href="#" className="text-gray-600 hover:text-blue-600">
             <svg xmlns="http://www.w3.org/2000/svg"
               fill="currentColor"
               viewBox="0 0 24 24"
-              class="w-6 h-6">
+              className="w-6 h-6">
               <path d="M22.675 0h-21.35C.597 0 0 .597 0 1.325v21.351C0 
              23.403.597 24 1.325 24h11.494V14.706h-3.13v-3.622h3.13V8.413c0-3.1 
              1.894-4.788 4.659-4.788 1.325 0 2.463.099 
@@ -26,11 +26,11 @@ const Footer = () => {
              0 22.675 0z"/>
             </svg>
           </a>
-          <a href="#" class="text-gray-600 hover:text-blue-400">
+          <a href="#" className="text-gray-600 hover:text-blue-400">
             <svg xmlns="http://www.w3.org/2000/svg"
               fill="currentColor"
               viewBox="0 0 24 24"
-              class="w-6 h-6">
+              className="w-6 h-6">
               <path d="M24 4.557a9.83 9.83 0 0 1-2.828.775 
              4.932 4.932 0 0 0 2.165-2.724 
              9.864 9.864 0 0 1-3.127 1.195 
@@ -50,11 +50,11 @@ const Footer = () => {
           </a>
 
 
-          <a href="#" class="text-gray-600 hover:text-pink-500">
+          <a href="#" className="text-gray-600 hover:text-pink-500">
             <svg xmlns="http://www.w3.org/2000/svg"
               fill="currentColor"
               viewBox="0 0 24 24"
-              class="w-6 h-6">
+              className="w-6 h-6">
               <path d="M12 2.163c3.204 0 3.584.012 
              4.85.07 1.366.062 2.633.34 
              3.608 1.316.975.975 1.254 
@@ -89,7 +89,7 @@ const Footer = () => {
             <svg xmlns="http://www.w3.org/2000/svg"
               fill="currentColor"
               viewBox="0 0 24 24"
-              class="w-6 h-6">
+              className="w-6 h-6">
               <path d="M23.498 6.186a2.974 2.974 0 0 0-2.094-2.103C19.505 
              3.5 12 3.5 12 3.5s-7.505 0-9.404.583A2.974 2.974 0 0 
              0 .502 6.186C0 8.09 0 12 0 12s0 3.91.502 

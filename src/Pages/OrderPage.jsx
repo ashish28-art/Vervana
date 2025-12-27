@@ -1,3 +1,4 @@
+import { Home } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -163,13 +164,14 @@ const OrderPage = () => {
           </div>
 
           {/* CTA */}
-          <div className="mt-10 flex justify-center sm:justify-centre">
+          <div className="mt-10 flex  justify-center sm:justify-centre">
             <button
               onClick={handleOrder}
               className="w-[200px] h-[42px] border border-[#212529] text-[#141414] text-sm rounded-md hover:bg-[#f8f8f8] transition"
             >
               Go to Payment
             </button>
+            
           </div>
         </div>
       </div>

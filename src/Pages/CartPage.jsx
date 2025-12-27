@@ -93,11 +93,11 @@ const CartPage = () => {
 
           <div className="flex justify-between mb-2 text-sm sm:text-base">
             <span>Subtotal</span>
-            <span>₹{getTotalPrice()}</span>
+            <span>${getTotalPrice()}</span>
           </div>
           <div className="flex justify-between mb-2 text-sm sm:text-base">
             <span>Shipping</span>
-            <span>₹50</span>
+            <span>$50</span>
           </div>
           <div className="flex justify-between font-bold text-lg mb-4">
             <span>Total</span>

@@ -138,6 +138,7 @@ const Payment = () => {
           >
             Pay Now
           </button>
+          
         </form>
 
         <p className="text-center text-xs text-gray-500 mt-5">

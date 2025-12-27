@@ -14,8 +14,8 @@ const WishlistPage = () => {
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-8 justify-items-center">
           {wishlistItems.map((item) => (
             <div key={item.id} className="w-64 h-80 p-4 shadow rounded-lg border flex flex-col justify-between items-center">
-              <img src={item.img} alt={item.name} className="h-40 object-cover mb-3 rounded" />
-              <h2 className="font-semibold">{item.name}</h2>
+              <img src={item.thumbnail} alt={item.title} className="h-40 object-cover mb-3 rounded" />
+              <h2 className="font-semibold">{item.title}</h2>
               <p className="text-gray-600">{item.price}</p>
               <button 
                 onClick={() => removeFromWishlist(item.id)} 

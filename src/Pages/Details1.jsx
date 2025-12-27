@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext,useEffect } from 'react';
 import { Women } from './Data/Women';
 import { useParams } from 'react-router-dom';
 import { CartContext } from '../Context/CartContext';
@@ -8,12 +8,31 @@ const Details = () => {
   const { addToCart } = useContext(CartContext);
   const { addToWishlist } = useContext(WishlistContext);
   const { id } = useParams();
-  const product = Women.find((p) => p.id.toString() === id);
+  const[product,setProduct]=useState(null);
+  const source = location.state?.source || "platzi";
+  
+ 
 
-  if (!product) return <h2 className="text-center mt-20 text-xl font-semibold">Product not found</h2>;
+  
 
   const [selectedSize, setSelectedSize] = useState(null);
   const sizes = ["XS", "S", "M", "L", "XL"];
+
+   useEffect(() => {
+      let url = "";
+  
+      if (source === "dummyjson") {
+        url = `https://dummyjson.com/products/${id}`;
+      } else {
+        url = `https://api.escuelajs.co/api/v1/products/${id}`;
+      }
+  
+      fetch(url)
+        .then((res) => res.json())
+        .then((data) => setProduct(data))
+        .catch((err) => console.error(err));
+    }, [id, source]);
+    if (!product) return <h2 className="text-center mt-20 text-xl font-semibold">Loading...</h2>;
 
   const handleAddToCart = () => {
     if (!selectedSize) {
@@ -35,7 +54,7 @@ const Details = () => {
       {/* Product Image */}
       <div className="w-full md:w-1/2 flex justify-center">
         <img
-          src={product.img}
+          src={product.thumbnail}
           alt={product.name}
           className="w-full max-w-[350px] sm:max-w-[400px] md:max-w-[450px] h-auto object-cover rounded-xl shadow-lg"
         />
@@ -43,7 +62,7 @@ const Details = () => {
 
       {/* Product Details */}
       <div className="w-full md:w-1/2 flex flex-col justify-start space-y-6 mt-8 md:mt-20">
-        <h2 className="text-2xl sm:text-3xl font-poppins font-medium">{product.name}</h2>
+        <h2 className="text-2xl sm:text-3xl font-poppins font-medium">{product.title}</h2>
 
         {/* Size Selection */}
         <div className="flex flex-wrap gap-3 mt-4">
@@ -122,33 +141,18 @@ const Details = () => {
         <div className="w-full h-px bg-gray-300"></div>
 
         {/* Product Details */}
-        <div className="font-poppins">
-          <h1 className="text-xl sm:text-2xl mb-2 font-semibold">Product details</h1>
+        <div>
+          <h1 className="text-xl sm:text-2xl mb-2 font-medium">Product Details</h1>
 
-          <div className="space-y-3 text-gray-600">
-            <div>
-              <h2 className="text-lg sm:text-xl font-medium">Material</h2>
-              <p>{product.Material}</p>
-            </div>
+          
+          <p className="text-gray-600 mb-3">{product.description}</p>
 
-            <div>
-              <h2 className="text-lg sm:text-xl font-medium">Fit</h2>
-              <p>{product.Fit}</p>
-            </div>
+          
 
-            <div>
-              <h2 className="text-lg sm:text-xl font-medium">Features</h2>
-              <div className="space-y-1">
-                {product.Features.map((line, index) => (
-                  <p key={index}>{line}</p>
-                ))}
-              </div>
-            </div>
-          </div>
+          
         </div>
 
-        {/* Divider */}
-        <div className="w-full h-px bg-gray-300"></div>
+      
 
         {/* Ratings Section */}
         <div className="ratings">

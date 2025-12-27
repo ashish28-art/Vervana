@@ -28,12 +28,12 @@ export const CartProvider = ({ children }) => {
 
   const clearCart = () => {
     setCartItems([]);
-    localStorage.removeItem("cart");
+    localStorage.removeItem("cartItems");
   };
 
   const getTotalPrice = () => {
     return cartItems.reduce((total, item) => {
-      const price = Number(item.price.replace(/[^0-9.-]+/g, ""));
+      const price = Number(item.price);
       return total + price * item.quantity;
     }, 0);
   };
@@ -50,17 +50,17 @@ export const CartProvider = ({ children }) => {
   
   const decrement = (uniqueId) => {
     setCartItems(cartItems.map(item =>
-      item.uniqueId === uniqueId && item.quantity > 0
+      item.uniqueId === uniqueId && item.quantity > 1
         ? { ...item, quantity: item.quantity - 1 }
         : item
     ));
   };
   
 
-  useEffect(()=>{
-    localStorage.setItem("cartItems",JSON.stringify(cartItems));
-  })
-
+  useEffect(() => {
+    localStorage.setItem("cartItems", JSON.stringify(cartItems));
+  }, [cartItems]);
+  
   return (
     <CartContext.Provider
       value={{
