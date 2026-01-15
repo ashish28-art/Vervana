@@ -1,5 +1,5 @@
 // src/Context/AuthContext.jsx
-import React, { createContext, useContext, useEffect, useState } from "react";
+import React, { createContext, useContext, useEffect, useState, useMemo, useCallback } from "react";
 import { auth, googleProvider } from "../Firebase/firebase"; // make sure googleProvider is exported
 import {
   signInWithEmailAndPassword,
@@ -21,17 +21,24 @@ export const AuthProvider = ({ children }) => {
     return () => unsubscribe();
   }, []);
 
-  const login = (email, password) => signInWithEmailAndPassword(auth, email, password);
-  const signup = (email, password) => createUserWithEmailAndPassword(auth, email, password);
-  const googleLogin = () => signInWithPopup(auth, googleProvider);
-  const logout = () => signOut(auth);
+  const login = useCallback((email, password) => signInWithEmailAndPassword(auth, email, password), []);
+  const signup = useCallback((email, password) => createUserWithEmailAndPassword(auth, email, password), []);
+  const googleLogin = useCallback(() => signInWithPopup(auth, googleProvider), []);
+  const logout = useCallback(() => signOut(auth), []);
 
   const userLoggedIn = !!currentUser;
 
+  const value = useMemo(() => ({
+    currentUser,
+    userLoggedIn,
+    login,
+    signup,
+    googleLogin,
+    logout
+  }), [currentUser, userLoggedIn, login, signup, googleLogin, logout]);
+
   return (
-    <AuthContext.Provider
-      value={{ currentUser, userLoggedIn, login, signup, googleLogin, logout }}
-    >
+    <AuthContext.Provider value={value}>
       {children}
     </AuthContext.Provider>
   );

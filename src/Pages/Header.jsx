@@ -1,15 +1,19 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useMemo, memo } from 'react';
 import vervana from '../assets/vervana.png';
 import { NavLink } from 'react-router-dom';
 import { CartContext } from '../Context/CartContext.jsx';
 import { WishlistContext } from '../Context/WishlistContext.jsx';
 import { motion, AnimatePresence } from "framer-motion";
+import { SearchContext } from '../Context/Searchcontext.jsx';
 
-const Header = () => {
+const Header = memo(() => {
   const { cartItems } = useContext(CartContext);
   const { wishlistItems } = useContext(WishlistContext);
   const [menuOpen, setMenuOpen] = useState(false);
-  const totalQuantity = cartItems.length;
+  const totalQuantity = useMemo(() => cartItems.length, [cartItems.length]);
+  const wishlistCount = useMemo(() => wishlistItems.length, [wishlistItems.length]);
+  const {text, setText} = useContext(SearchContext);
+
 
   return (
     <div className="py-4 bg-white shadow-md sticky top-0 z-50">
@@ -56,12 +60,17 @@ const Header = () => {
           {/* Icons (Desktop + Mobile) */}
           <div className="hidden md:flex gap-6">
             {/* Search */}
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+            {text && (
+              <input onChange={(e)=>setText(e.target.value)} type='text' placeholder='Search products'/>
+             
+            )}
+            <svg onClick={()=>setText(!text)} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
               strokeWidth="1.5" stroke="currentColor"
               className="w-6 h-6 cursor-pointer duration-200 hover:text-gray-600 hover:scale-90">
               <path strokeLinecap="round" strokeLinejoin="round"
                 d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
             </svg>
+            
 
             {/* Cart */}
             <div className="relative">
@@ -99,9 +108,9 @@ const Header = () => {
                     c0 7.22 9 12 9 12s9-4.78 9-12Z" />
                 </svg>
               </NavLink>
-              {wishlistItems.length > 0 && (
+              {wishlistCount > 0 && (
                 <span className="absolute -top-2 -right-2 bg-red-600 text-white text-xs font-bold px-1.5 py-0.5 rounded-full">
-                  {wishlistItems.length}
+                  {wishlistCount}
                 </span>
               )}
             </div>
@@ -149,6 +158,8 @@ const Header = () => {
       </AnimatePresence>
     </div>
   );
-};
+});
+
+Header.displayName = 'Header';
 
 export default Header;

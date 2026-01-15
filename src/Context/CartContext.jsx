@@ -1,4 +1,4 @@
-import React, { createContext, useState,useEffect } from "react";
+import React, { createContext, useState, useEffect, useMemo, useCallback } from "react";
 
 // Create the Context
 export const CartContext = createContext();
@@ -10,7 +10,7 @@ export const CartProvider = ({ children }) => {
     return savedCart?JSON.parse(savedCart):[];
   });
 
-  const addToCart = (product) => {
+  const addToCart = useCallback((product) => {
     setCartItems((prevItems) => {
       // Create a unique key for each size
       const uniqueId = `${product.id}-${product.size}`;
@@ -24,38 +24,37 @@ export const CartProvider = ({ children }) => {
         return [...prevItems, { ...product, quantity: 1, uniqueId }];
       }
     });
-  };
+  }, []);
 
-  const clearCart = () => {
+  const clearCart = useCallback(() => {
     setCartItems([]);
     localStorage.removeItem("cartItems");
-  };
+  }, []);
 
-  const getTotalPrice = () => {
+  const getTotalPrice = useCallback(() => {
     return cartItems.reduce((total, item) => {
       const price = Number(item.price);
       return total + price * item.quantity;
     }, 0);
-  };
+  }, [cartItems]);
 
-  const removeFromCart = (uniqueId) => {
-    setCartItems(cartItems.filter((item) => item.uniqueId !== uniqueId));
-  };
+  const removeFromCart = useCallback((uniqueId) => {
+    setCartItems(prevItems => prevItems.filter((item) => item.uniqueId !== uniqueId));
+  }, []);
   
-  const increment = (uniqueId) => {
-    setCartItems(cartItems.map(item =>
+  const increment = useCallback((uniqueId) => {
+    setCartItems(prevItems => prevItems.map(item =>
       item.uniqueId === uniqueId ? { ...item, quantity: item.quantity + 1 } : item
     ));
-  };
+  }, []);
   
-  const decrement = (uniqueId) => {
-    setCartItems(cartItems.map(item =>
+  const decrement = useCallback((uniqueId) => {
+    setCartItems(prevItems => prevItems.map(item =>
       item.uniqueId === uniqueId && item.quantity > 1
         ? { ...item, quantity: item.quantity - 1 }
         : item
     ));
-  };
-  
+  }, []);
 
   useEffect(() => {
     localStorage.setItem("cartItems", JSON.stringify(cartItems));

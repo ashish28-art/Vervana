@@ -4,7 +4,7 @@ import Footer from "./ Footer.jsx";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-import { useRef, useState, useEffect } from "react";
+import { useRef, useState, useEffect, useMemo, useCallback } from "react";
 
 
 const categories = [
@@ -51,17 +51,17 @@ const Home = () => {
   const navigate = useNavigate();
   const categoryRef = useRef(null);
 
-  const handleScrollToCategories = () => {
+  const handleScrollToCategories = useCallback(() => {
     categoryRef.current?.scrollIntoView({ behavior: "smooth" });
-  };
-  const handleCategory = (title) => {
+  }, []);
+  
+  const handleCategory = useCallback((title) => {
     if (["Shirts", "Tshirts"].includes(title)) {
       navigate("/men");
     } else {
       navigate("/women")
     }
-
-  }
+  }, [navigate]);
   return (
     <>
       {/* HERO SECTION */}
@@ -135,6 +135,8 @@ const Home = () => {
                 <img
                   src={category.image}
                   alt={category.title}
+                  loading="lazy"
+                  decoding="async"
                   className="w-full h-56 object-cover transition-transform duration-300 transform hover:scale-110"
                 />
               </div>
@@ -187,8 +189,10 @@ const Home = () => {
                   state={{ source: "dummyjson" }}>
                   <div className="w-full h-56 rounded-lg overflow-hidden">
                     <img
-                      src={item.thumbnail }
+                      src={item.thumbnail}
                       alt={item.title}
+                      loading="lazy"
+                      decoding="async"
                     />
 
                   </div>

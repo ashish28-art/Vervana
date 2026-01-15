@@ -1,13 +1,14 @@
-import React, { useContext, useState,useEffect } from 'react';
+import React, { useContext, useState, useEffect, useMemo, useCallback } from 'react';
 import { WishlistContext } from '../Context/WishlistContext';
 import { Link } from 'react-router-dom';
 import { motion } from "framer-motion";
+import { SearchContext } from '../Context/Searchcontext';
 
 const Products = () => {
   const [selectedCategory, setSelectedCategory] = useState("All");
-  const {wishlistItems}=useContext(WishlistContext);
-  const { addToWishlist } = useContext(WishlistContext);
-  const[items,setItems]=useState([]);
+  const { wishlistItems, addToWishlist } = useContext(WishlistContext);
+  const { text } = useContext(SearchContext);
+  const [items, setItems] = useState([]);
   
   useEffect(() => {
     Promise.all([
@@ -23,15 +24,29 @@ const Products = () => {
       .catch((err) => console.error(err));
   }, []);
   
+  const safeSearch = useMemo(() => text?.toLowerCase() || "", [text]);
 
-  const filteredItems = items.filter((item) => {
-    const matchesCategory =
-    selectedCategory === "All" ||
-    item.category.includes(selectedCategory.toLowerCase());
+  const filteredItems = useMemo(() => {
+    return items.filter((item) => {
+      const matchesCategory =
+        selectedCategory === "All" ||
+        item.category.includes(selectedCategory.toLowerCase());
+      
+      const matchesSearch = item?.title?.toLowerCase().includes(safeSearch);
+      
+      if (safeSearch !== "") {
+        return matchesSearch;
+      }
+      
+      return matchesCategory;
+    });
+  }, [items, selectedCategory, safeSearch]);
   
-    const price = Number(item.price);
-    return matchesCategory;
-  });
+  const handleWishlistClick = useCallback((e, item) => {
+    e.preventDefault();
+    e.stopPropagation();
+    addToWishlist(item);
+  }, [addToWishlist]);
 
   return (
     <div className="mt-6 flex justify-center sticky top-24">
@@ -86,7 +101,13 @@ const Products = () => {
              
               
                 <div className="w-full h-56 rounded-lg overflow-hidden">
-                  <img src={item.thumbnail} alt={item.name} className="w-full h-full object-cover" />
+                  <img 
+                    src={item.thumbnail} 
+                    alt={item.name} 
+                    loading="lazy"
+                    decoding="async"
+                    className="w-full h-full object-cover" 
+                  />
                 </div>
              
               <div className="flex flex-col justify-between flex-1 mt-3">
@@ -94,7 +115,7 @@ const Products = () => {
                 <p className="text-gray-700 font-semibold">${item.price}</p>
                 <div className="mt-2 flex justify-between gap-2">
                   <button
-                    onClick={() => addToWishlist(item)}
+                    onClick={(e) => handleWishlistClick(e, item)}
                     className="px-3 py-1 rounded-md text-sm transition-transform duration-200 hover:scale-125"
                   >
                     <svg xmlns="http://www.w3.org/2000/svg" fill={wishlistItems.some((i) => i.id === item.id) ? "red" : "none"} viewBox="0 0 24 24" strokeWidth="1.5" stroke="red" className="w-6 h-6">

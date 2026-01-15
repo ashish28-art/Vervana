@@ -1,13 +1,19 @@
-import React, { useContext, useState,useEffect } from 'react';
+import React, { useContext, useState, useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { WishlistContext } from '../Context/WishlistContext';
 import { motion } from "framer-motion";
+import { SearchContext } from '../Context/Searchcontext';
 
 const Products = () => {
   const [selectedCategory, setSelectedCategory] = useState("All");
-  const { wishlistItems } = useContext(WishlistContext)
-  const { addToWishlist } = useContext(WishlistContext);
-  const [items,setItems]=useState([]);
+  const { wishlistItems, addToWishlist } = useContext(WishlistContext);
+  const [items, setItems] = useState([]);
+  const { text } = useContext(SearchContext);
+  const safeSearch = useMemo(() => text?.toLowerCase() || "", [text]);
+  const safeCategory = useMemo(() => selectedCategory?.toLowerCase() || "all", [selectedCategory]);
+
+
+
 
   useEffect(() => {
     Promise.all([
@@ -21,18 +27,28 @@ const Products = () => {
       })
       .catch((err) => console.error(err));
   }, []);
+
+
+
+  const filteredItems = useMemo(() => {
+    return items.filter((item) => {
+      const matchesCategory =
+        safeCategory === "all" ||
+        item?.category?.toLowerCase().includes(safeCategory);
+    
+      const matchesSearch =
+        item?.title?.toLowerCase().includes(safeSearch);
+    
+      if (safeSearch !== "") {
+        return matchesSearch;
+      }
+    
+      return matchesCategory;
+    });
+  }, [items, safeCategory, safeSearch]);
+
   
   
-
-  const filteredItems = items.filter((item) => {
-    const matchesCategory =
-  selectedCategory === "All" ||
-  item.category.includes(selectedCategory.toLowerCase());
-
-    const price = Number(item.price);
-   
-    return matchesCategory;
-  });
 
   return (
     <div className="mt-6 flex justify-center sticky top-24 ">
@@ -53,10 +69,10 @@ const Products = () => {
         {/* Category Buttons */}
         <div className='grid' >
           <div className="flex flex-wrap gap-4 mb-6 justify-center">
-            {["All","shirts","shoes", "watches" ].map((category, idx) => (
+            {["All", "shirts", "shoes", "watches"].map((category, idx) => (
               <motion.button
-              key={category}
-               
+                key={category}
+
                 onClick={() => setSelectedCategory(category)}
                 className={`px-4 py-1.5 rounded-full text-sm font-medium transition ${selectedCategory === category
                   ? "bg-gray-800 text-white"
@@ -80,8 +96,8 @@ const Products = () => {
 
           <div className="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-20 px-20" >
             {filteredItems.map((item, index) => (
-              <Link  key={item.id} to={`/product/${item.id}`}
-              state={{source:"dummyjson"}}>
+              <Link key={item.id} to={`/product/${item.id}`}
+                state={{ source: "dummyjson" }}>
                 <motion.div
                   key={item.id}
                   className="card w-[250px] h-[380px] rounded-2xl shadow-md p-3 flex flex-col cursor-pointer"
@@ -96,6 +112,8 @@ const Products = () => {
                     <img
                       src={item.thumbnail}
                       alt={item.title}
+                      loading="lazy"
+                      decoding="async"
                       className="w-full h-full object-cover"
                     />
                   </div>
@@ -105,7 +123,7 @@ const Products = () => {
                     <p className="text-gray-700 font-semibold">${item.price}</p>
                     <div className="mt-2 flex justify-between gap-2">
                       <button
-                        onClick={(e)=>{
+                        onClick={(e) => {
                           e.preventDefault();
                           e.stopPropagation();
                           addToWishlist(item)
