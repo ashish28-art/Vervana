@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useMemo,useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import {
   removeFromCart,
@@ -21,9 +21,13 @@ const CartPage = () => {
   const Items = useSelector((state) => state.cart.items)
   const totalPrice = useMemo(() => {
     return cartItems.reduce(
-      (sum, item) => sum + Number(item.price) * item.quantity,
+      (sum, item) => sum + Math.floor(Number(item.price)) * item.quantity,
       0
     );
+  }, [cartItems]);
+
+  useEffect(() => {
+    localStorage.setItem("cartItems", JSON.stringify(cartItems));
   }, [cartItems]);
 
   return (
@@ -34,7 +38,7 @@ const CartPage = () => {
           <h1 className="text-xl font-semibold mb-2 sm:mb-0">Items in your cart</h1>
           {cartItems.length > 0 && (
             <button
-                onClick={() => dispatch(clearCart())}
+              onClick={() => dispatch(clearCart())}
               className="text-sm underline text-gray-600 hover:text-black transition"
             >
               Remove all
@@ -110,16 +114,16 @@ const CartPage = () => {
 
           <div className="flex justify-between mb-2 text-sm sm:text-base">
             <span>${totalPrice}</span>
-            <span>₹{totalPrice + 50}</span>
+            <span>${totalPrice + 50}</span>
 
           </div>
           <div className="flex justify-between mb-2 text-sm sm:text-base">
             <span>Shipping</span>
-           <span>₹{totalPrice + 50}</span>
+            <span>${totalPrice + 50}</span>
           </div>
           <div className="flex justify-between font-bold text-lg mb-4">
             <span>Total</span>
-            <span>₹{totalPrice + 50}</span>
+            <span>${totalPrice + 50}</span>
           </div>
 
           <button
