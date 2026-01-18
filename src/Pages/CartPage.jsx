@@ -1,15 +1,30 @@
-import React, { useContext } from "react";
-import { CartContext } from "../Context/CartContext";
+import { useMemo } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import {
+  removeFromCart,
+  increment,
+  decrement,
+  clearCart,
+} from "../Store/cartSlice"
+
 import { useNavigate } from "react-router-dom";
 
 const CartPage = () => {
-  const { cartItems, removeFromCart, getTotalPrice, clearCart, increment, decrement } =
-    useContext(CartContext);
+  const dispatch = useDispatch();
+  const cartItems = useSelector((state) => state.cart.items);
+
   const navigate = useNavigate();
 
   const handleOrder = () => {
     navigate("/OrderPage");
   };
+  const Items = useSelector((state) => state.cart.items)
+  const totalPrice = useMemo(() => {
+    return cartItems.reduce(
+      (sum, item) => sum + Number(item.price) * item.quantity,
+      0
+    );
+  }, [cartItems]);
 
   return (
     <div className="p-4 sm:p-6 flex flex-col lg:flex-row gap-8 font-poppins">
@@ -19,7 +34,7 @@ const CartPage = () => {
           <h1 className="text-xl font-semibold mb-2 sm:mb-0">Items in your cart</h1>
           {cartItems.length > 0 && (
             <button
-              onClick={clearCart}
+                onClick={() => dispatch(clearCart())}
               className="text-sm underline text-gray-600 hover:text-black transition"
             >
               Remove all
@@ -57,14 +72,16 @@ const CartPage = () => {
 
                   <div className="flex items-center gap-4 mt-3">
                     <button
-                      onClick={() => decrement(item.uniqueId)}
+                      onClick={() => dispatch(decrement(item.uniqueId))}
+
                       className="border rounded-full px-2 text-lg hover:bg-gray-100"
                     >
                       −
                     </button>
                     <span className="text-base font-medium">{item.quantity}</span>
                     <button
-                      onClick={() => increment(item.uniqueId)}
+                      onClick={() => dispatch(increment(item.uniqueId))}
+
                       className="border rounded-full px-2 text-lg hover:bg-gray-100"
                     >
                       +
@@ -92,16 +109,17 @@ const CartPage = () => {
           <h2 className="text-xl font-semibold mb-4">Order Summary</h2>
 
           <div className="flex justify-between mb-2 text-sm sm:text-base">
-            <span>Subtotal</span>
-            <span>${getTotalPrice()}</span>
+            <span>${totalPrice}</span>
+            <span>₹{totalPrice + 50}</span>
+
           </div>
           <div className="flex justify-between mb-2 text-sm sm:text-base">
             <span>Shipping</span>
-            <span>$50</span>
+           <span>₹{totalPrice + 50}</span>
           </div>
           <div className="flex justify-between font-bold text-lg mb-4">
             <span>Total</span>
-            <span>₹{getTotalPrice() + 50}</span>
+            <span>₹{totalPrice + 50}</span>
           </div>
 
           <button

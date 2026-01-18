@@ -1,20 +1,16 @@
 import React, { useState, useContext,useEffect } from 'react';
-import { Women } from './Data/Women';
 import { useParams } from 'react-router-dom';
-import { CartContext } from '../Context/CartContext';
 import { WishlistContext } from '../Context/WishlistContext';
+import { useDispatch } from 'react-redux';
+import { addCart } from '../Store/cartSlice';
+
 
 const Details = () => {
-  const { addToCart } = useContext(CartContext);
   const { addToWishlist } = useContext(WishlistContext);
   const { id } = useParams();
   const[product,setProduct]=useState(null);
   const source = location.state?.source || "platzi";
-  
- 
-
-  
-
+  const dispatch=useDispatch()
   const [selectedSize, setSelectedSize] = useState(null);
   const sizes = ["XS", "S", "M", "L", "XL"];
 
@@ -35,19 +31,20 @@ const Details = () => {
     if (!product) return <h2 className="text-center mt-20 text-xl font-semibold">Loading...</h2>;
 
   const handleAddToCart = () => {
-    if (!selectedSize) {
-      alert("Please select a size");
-      return;
-    }
-
-    addToCart({
-      id: product.id,
-      name: product.name,
-      price: product.price,
-      img: product.img,
-      size: selectedSize,
-    });
-  };
+      if (!selectedSize) {
+        alert("Please select a size");
+        return;
+      }
+      dispatch(
+        addCart({
+          id: product.id,
+          name: product.title,
+          price: product.price,
+          img: product.images[0],
+          size: selectedSize,
+        })
+      );
+    };
 
   return (
     <div className="flex flex-col md:flex-row items-start p-4 sm:p-6 md:p-8 lg:p-12 max-w-7xl mx-auto gap-10">

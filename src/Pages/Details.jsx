@@ -1,18 +1,20 @@
-import React, { useState, useContext,useEffect } from "react";
+import React, { useState, useEffect,useContext } from "react";
 import { useLocation } from "react-router-dom";
 import { useParams } from "react-router-dom";
-import { CartContext } from "../Context/CartContext";
 import { WishlistContext } from "../Context/WishlistContext";
+import { useDispatch } from "react-redux";
+import { addCart } from "../Store/cartSlice";
+
 
 const Details = () => {
   const { addToWishlist } = useContext(WishlistContext);
-  const { addToCart } = useContext(CartContext);
-  const location=useLocation();
+  const location = useLocation();
   const source = location.state?.source || "platzi";
   const { id } = useParams();
-  const [product,setProduct]=useState(null);
+  const [product, setProduct] = useState(null);
   const [selectedSize, setSelectedSize] = useState(null);
   const sizes = ["XS", "S", "M", "L", "XL"];
+  const dispatch = useDispatch();
 
   useEffect(() => {
     let url = "";
@@ -28,7 +30,7 @@ const Details = () => {
       .then((data) => setProduct(data))
       .catch((err) => console.error(err));
   }, [id, source]);
-  
+
 
   if (!product) return <h2 className="text-center mt-10 text-xl">Loading...</h2>;
 
@@ -37,15 +39,16 @@ const Details = () => {
       alert("Please select a size");
       return;
     }
-    addToCart({
-      id: product.id,
-      name: product.title,
-      price: product.price,
-      img: product.images[0],
-      size: selectedSize,
-    });
+    dispatch(
+      addCart({
+        id: product.id,
+        name: product.title,
+        price: product.price,
+        img: product.images[0],
+        size: selectedSize,
+      })
+    );
   };
-
   return (
     <div className="flex flex-col md:flex-row items-start gap-10 px-4 md:px-10 lg:px-20 py-10">
       {/* LEFT: Product Image */}
@@ -68,10 +71,9 @@ const Details = () => {
               key={size}
               onClick={() => setSelectedSize(size)}
               className={`w-12 h-12 sm:w-14 sm:h-14 flex flex-col items-center justify-center rounded-full border transition 
-                ${
-                  selectedSize === size
-                    ? "bg-black text-white border-black"
-                    : "bg-white text-gray-700 border-gray-300 hover:border-black"
+                ${selectedSize === size
+                  ? "bg-black text-white border-black"
+                  : "bg-white text-gray-700 border-gray-300 hover:border-black"
                 }`}
             >
               <svg
@@ -140,12 +142,12 @@ const Details = () => {
         <div>
           <h1 className="text-xl sm:text-2xl mb-2 font-medium">Product Details</h1>
 
-          
+
           <p className="text-gray-600 mb-3">{product.description}</p>
 
-          
 
-          
+
+
         </div>
 
         <hr className="border-gray-300" />

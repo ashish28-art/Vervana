@@ -1,7 +1,6 @@
 import React, { useState, useContext } from "react";
 import { Favourites } from "./Pages/Data/Favourites";
 import { useParams } from "react-router-dom";
-import { CartContext } from "./Context/CartContext";
 import { WishlistContext } from "./Context/WishlistContext";
 
 const FavDetails = () => {

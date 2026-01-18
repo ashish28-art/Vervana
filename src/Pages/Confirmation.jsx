@@ -1,12 +1,19 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { CheckCircle } from "lucide-react";
-import { CartContext } from "../Context/CartContext";
 import { useContext } from "react";
+import { useMemo } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import {
+  removeFromCart,
+  increment,
+  decrement,
+  clearCart,
+} from "../Store/cartSlice"
 
 const Confirmation = () => {
+  const dispatch=useDispatch();
   const navigate = useNavigate();
-  const { clearCart } = useContext(CartContext);
   const handleShopping=()=>{
     clearCart();
     localStorage.removeItem("cart");

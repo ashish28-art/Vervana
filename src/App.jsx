@@ -1,5 +1,4 @@
 import { Routes, Route } from "react-router-dom";
-import { CartProvider } from "./Context/CartContext";
 import { WishlistProvider } from "./Context/WishlistContext";
 import Header from "./Pages/Header";
 import Home from './Pages/Home';
@@ -11,20 +10,17 @@ import Details from "./Pages/Details";
 import Details1 from './Pages/Details1'
 import Profile from "./Pages/Profile";
 import { AuthProvider } from "./Context/AuthContext";
-import {SearchProvider} from './Context/SearchContext'
+import { SearchProvider } from "./Context/Searchcontext";
 import Dashboard from './Pages/Dashboard'
 import OrderPage from "./Pages/OrderPage";
 import Payment from "./Pages/Payment";
 import Confirmation from "./Pages/Confirmation";
 import FavDetails from "./FavDetails";
 
-
-
 function App() {
   return (
   <SearchProvider>
       <AuthProvider>
-        <CartProvider>
           <WishlistProvider>
             <Header />
             <Routes>
@@ -44,7 +40,6 @@ function App() {
               <Route path="/confirmation" element={<Confirmation />} />
             </Routes>
           </WishlistProvider>
-        </CartProvider>
       </AuthProvider>
       </SearchProvider>
    

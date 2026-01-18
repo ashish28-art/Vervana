@@ -1,24 +1,27 @@
 import React, { useContext, useState, useMemo, memo } from 'react';
 import vervana from '../assets/vervana.png';
 import { NavLink } from 'react-router-dom';
-import { CartContext } from '../Context/CartContext.jsx';
 import { WishlistContext } from '../Context/WishlistContext.jsx';
 import { motion, AnimatePresence } from "framer-motion";
 import { SearchContext } from '../Context/Searchcontext.jsx';
+import { useSelector } from 'react-redux';
+
+
 
 const Header = memo(() => {
-  const { cartItems } = useContext(CartContext);
   const { wishlistItems } = useContext(WishlistContext);
   const [menuOpen, setMenuOpen] = useState(false);
-  const totalQuantity = useMemo(() => cartItems.length, [cartItems.length]);
   const wishlistCount = useMemo(() => wishlistItems.length, [wishlistItems.length]);
   const {text, setText} = useContext(SearchContext);
+  const Items = useSelector((state) => state.cart.items);
+   const totalQuantity = Items.length;
+
+
 
 
   return (
     <div className="py-4 bg-white shadow-md sticky top-0 z-50">
       <div className="container mx-auto flex items-center justify-between px-4">
-        
         {/* Left Nav Links (Desktop) */}
         <ul className="hidden md:flex gap-8 font-poppins font-light">
           <li className="hover:underline hover:underline-offset-8 cursor-pointer">
