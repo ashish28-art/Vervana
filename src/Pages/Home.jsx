@@ -9,12 +9,12 @@ import { useRef, useState, useEffect, useMemo, useCallback } from "react";
 
 const categories = [
   {
-    title: "MEN",
+    title: "Men",
     image:
       "https://triprindia.com/cdn/shop/files/TGYRNOS-PLAIND1651.jpg?v=1741861583",
   },
   {
-    title: "WOMEN",
+    title: "Women",
     image:
       "https://thehouseofrare.com/cdn/shop/files/HENARES-OFF-WHITE5559.jpg?v=1743501047",
   },
