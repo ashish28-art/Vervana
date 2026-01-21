@@ -46,7 +46,7 @@ const Home = () => {
   }, []);
   
   const handleCategory = useCallback((title) => {
-    if (["MEN"].includes(title)) {
+    if (["Men"].includes(title)) {
       navigate("/men");
     } else {
       navigate("/women")
