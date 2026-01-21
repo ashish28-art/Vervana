@@ -9,26 +9,16 @@ import { useRef, useState, useEffect, useMemo, useCallback } from "react";
 
 const categories = [
   {
-    title: "Shirts",
-    image:
-      "https://www.urbanofashion.com/cdn/shop/files/shirtsolreg-01-white.jpg?v=1738593655",
-
-  },
-  {
-    title: "Tshirts",
+    title: "MEN",
     image:
       "https://triprindia.com/cdn/shop/files/TGYRNOS-PLAIND1651.jpg?v=1741861583",
   },
   {
-    title: "Hoodies",
+    title: "WOMEN",
     image:
       "https://thehouseofrare.com/cdn/shop/files/HENARES-OFF-WHITE5559.jpg?v=1743501047",
   },
-  {
-    title: "Jeans",
-    image:
-      "https://hips.hearstapps.com/hmg-prod/images/guest-wears-black-sport-sunglasses-a-gray-tank-top-a-gray-news-photo-1734676507.pjpeg?crop=0.993xw:0.663xh;0.00170xw,0.227xh&resize=1120:*",
-  },
+  
 ];
 
 const Home = () => {
@@ -56,7 +46,7 @@ const Home = () => {
   }, []);
   
   const handleCategory = useCallback((title) => {
-    if (["Shirts", "Tshirts"].includes(title)) {
+    if (["MEN"].includes(title)) {
       navigate("/men");
     } else {
       navigate("/women")
@@ -105,7 +95,7 @@ const Home = () => {
       </div>
 
       {/* CATEGORIES SECTION */}
-      <section ref={categoryRef} className="category w-full py-10">
+      <section ref={categoryRef} className="category w-full py-10 ">
         <motion.h1
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -113,7 +103,7 @@ const Home = () => {
           viewport={{ once: true }}
           className="flex justify-center font-poppins font-normal text-3xl"
         >
-          Shop by category
+          Shop by 
         </motion.h1>
 
         <div className="flex flex-wrap justify-center gap-6 mt-8 px-4">
