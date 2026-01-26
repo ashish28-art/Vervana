@@ -11,6 +11,8 @@ const Products = () => {
   const { text } = useContext(SearchContext);
   const safeSearch = useMemo(() => text?.toLowerCase() || "", [text]);
   const safeCategory = useMemo(() => selectedCategory?.toLowerCase() || "all", [selectedCategory]);
+  const [filterOpen, setFilterOpen] = useState(false);
+  const [sort, setSort] = useState(null);
 
 
 
@@ -31,33 +33,51 @@ const Products = () => {
 
 
   const filteredItems = useMemo(() => {
+
     return items.filter((item) => {
       const matchesCategory =
         safeCategory === "all" ||
         item?.category?.toLowerCase().includes(safeCategory);
-    
+
       const matchesSearch =
         item?.title?.toLowerCase().includes(safeSearch);
-    
+
       if (safeSearch !== "") {
         return matchesSearch;
       }
-    
+
       return matchesCategory;
     });
   }, [items, safeCategory, safeSearch]);
 
-  
-  
+  const sortedItems = useMemo(() => {
+    const data = [...filteredItems];
+    if (sort == "lowToHigh") {
+      data.sort((a, b) => a.price - b.price);
+    }
+    if (sort == "highToLow") {
+      data.sort((a, b) => b.price - a.price);
+    }
+    return data;
+  }, [filteredItems, sort]);
+
+  const handleSort = (option) => {
+    setSort(option);
+    setFilterOpen(false);
+  };
+
+
+
+
 
   return (
     <div className="mt-6 flex justify-center sticky top-24 ">
 
 
 
-      <div className="w-100 p-6">
+      <div className="w-100 p-6 ">
         <motion.h1
-          className="heading font-poppins text-2xl mb-6"
+          className="heading font-poppins text-2xl mb-6 pl-20"
           initial={{ y: -30, opacity: 0 }}
           whileInView={{ y: 0, opacity: 1 }}
           viewport={{ once: true, amount: 0.2 }}
@@ -67,27 +87,52 @@ const Products = () => {
         </motion.h1>
 
         {/* Category Buttons */}
-        <div className='grid' >
-          <div className="flex flex-wrap gap-4 mb-6 justify-center">
+        <div className="flex items-center justify-between mb-6 pl-20">
+          {/* Left: Categories */}
+          <div className="flex flex-wrap gap-4">
             {["All", "shirts", "shoes", "watches"].map((category, idx) => (
               <motion.button
                 key={category}
-
                 onClick={() => setSelectedCategory(category)}
                 className={`px-4 py-1.5 rounded-full text-sm font-medium transition ${selectedCategory === category
-                  ? "bg-gray-800 text-white"
-                  : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+                    ? "bg-gray-800 text-white"
+                    : "bg-gray-200 text-gray-700 hover:bg-gray-300"
                   }`}
-                initial={{ y: -20, opacity: 0 }}
-                whileInView={{ y: 0, opacity: 1 }}
-                viewport={{ once: true, amount: 0.2 }}
-                transition={{ delay: idx * 0.1, duration: 0.5 }}
               >
                 {category}
               </motion.button>
             ))}
           </div>
+
+          {/* Right: Filter */}
+          <div className="relative">
+            <button
+              onClick={() => setFilterOpen(prev => !prev)}
+              className="text-sm font-medium text-gray-700 hover:text-black"
+            >
+              Filter by ▾
+            </button>
+
+            {filterOpen && (
+              <div className="absolute right-0 mt-2 w-48 bg-white border rounded-md shadow-lg z-50">
+                <button
+                  onClick={() => handleSort("lowToHigh")}
+                  className="w-full text-left px-4 py-2 text-sm hover:bg-gray-100"
+                >
+                  Price: Low to High
+                </button>
+
+                <button
+                  onClick={() => handleSort("highToLow")}
+                  className="w-full text-left px-4 py-2 text-sm hover:bg-gray-100"
+                >
+                  Price: High to Low
+                </button>
+              </div>
+            )}
+          </div>
         </div>
+
 
 
         {/* Products Grid */}
@@ -95,7 +140,7 @@ const Products = () => {
 
 
           <div className="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-20 px-20" >
-            {filteredItems.map((item, index) => (
+            {sortedItems.map((item, index) => (
               <Link key={item.id} to={`/product/${item.id}`}
                 state={{ source: "dummyjson" }}>
                 <motion.div

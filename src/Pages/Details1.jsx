@@ -147,6 +147,11 @@ const Details = () => {
           
 
           
+          
+
+          
+
+          
         </div>
 
       
