@@ -1,4 +1,5 @@
 import React, { createContext, useState, useMemo, useCallback } from "react";
+import toast from "react-hot-toast";
 
 export const WishlistContext = createContext();
 
@@ -8,15 +9,21 @@ export const WishlistProvider = ({ children }) => {
 
  
   const addToWishlist = useCallback((item) => {
-    setWishlistItems((prev) => {
-      const exists = prev.some((i) => i.id === item.id);
-      if (exists) {
-        return prev.filter((i) => i.id !== item.id);
-      } else {
-        return [...prev, item];
-      }
-    });
-  }, []);
+  setWishlistItems((prev) => {
+    const exists = prev.some((i) => i.id === item.id);
+
+    if (exists) {
+      toast("Removed from wishlist", {
+        icon: "❌",
+      });
+      return prev.filter((i) => i.id !== item.id);
+    } else {
+      toast.success("Added to wishlist ❤️");
+      return [...prev, item];
+    }
+  });
+}, []);
+
 
   
   const removeFromWishlist = useCallback((id) => {

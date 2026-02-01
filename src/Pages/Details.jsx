@@ -1,9 +1,10 @@
-import React, { useState, useEffect,useContext } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { useLocation } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import { WishlistContext } from "../Context/WishlistContext";
 import { useDispatch } from "react-redux";
 import { addCart } from "../Store/cartSlice";
+import toast from "react-hot-toast";
 
 
 const Details = () => {
@@ -48,6 +49,7 @@ const Details = () => {
         size: selectedSize,
       })
     );
+    toast.success("Added to cart 🛒");
   };
   return (
     <div className="flex flex-col md:flex-row items-start gap-10 px-4 md:px-10 lg:px-20 py-10">
@@ -97,9 +99,14 @@ const Details = () => {
 
         <p className="text-2xl font-semibold text-gray-800">${product.price}</p>
 
-        <p className="text-gray-600 leading-relaxed text-sm sm:text-base">
-          This is a high-quality product designed for comfort and style. Perfect for your daily wear.
-        </p>
+
+        {/* <p className="text-gray-600 leading-relaxed text-sm sm:text-base">
+          🚚 Delivered in 3–5 business days<br/>
+
+          🔄 7-day easy returns<br/>
+
+          🔒 Secure checkout
+        </p> */}
 
         {/* Buttons */}
         <div className="flex flex-wrap gap-4 sm:gap-6">
@@ -135,6 +142,13 @@ const Details = () => {
             Wishlist
           </button>
         </div>
+        <p className="text-gray-600 leading-relaxed text-sm sm:text-base">
+          🚚 Delivered in 3–5 business days<br/>
+
+          🔄 7-day easy returns<br/>
+
+          🔒 Secure checkout
+        </p>
 
         <hr className="border-gray-300" />
 

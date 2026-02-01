@@ -16,12 +16,23 @@ import OrderPage from "./Pages/OrderPage";
 import Payment from "./Pages/Payment";
 import Confirmation from "./Pages/Confirmation";
 import FavDetails from "./FavDetails";
+import { Toaster } from "react-hot-toast";
 
 function App() {
   return (
   <SearchProvider>
       <AuthProvider>
           <WishlistProvider>
+            <Toaster
+            
+            position="top-right"
+            toastOptions={{
+              className:"mt-11",
+              duration: 2000,
+            }}
+          />
+
+          
             <Header />
             <Routes>
               <Route path="/" element={<Home />} />

@@ -11,6 +11,7 @@ const cartSlice = createSlice({
     addCart(state, action) {
       const product = action.payload;
       const uniqueId = `${product.id}-${product.size}`;
+      
 
       const existingItem = state.items.find(
         (item) => item.uniqueId === uniqueId

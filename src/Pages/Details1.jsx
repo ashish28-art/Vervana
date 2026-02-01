@@ -1,4 +1,4 @@
-import React, { useState, useContext,useEffect } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { WishlistContext } from '../Context/WishlistContext';
 import { useDispatch } from 'react-redux';
@@ -8,43 +8,43 @@ import { addCart } from '../Store/cartSlice';
 const Details = () => {
   const { addToWishlist } = useContext(WishlistContext);
   const { id } = useParams();
-  const[product,setProduct]=useState(null);
+  const [product, setProduct] = useState(null);
   const source = location.state?.source || "platzi";
-  const dispatch=useDispatch()
+  const dispatch = useDispatch()
   const [selectedSize, setSelectedSize] = useState(null);
   const sizes = ["XS", "S", "M", "L", "XL"];
 
-   useEffect(() => {
-      let url = "";
-  
-      if (source === "dummyjson") {
-        url = `https://dummyjson.com/products/${id}`;
-      } else {
-        url = `https://api.escuelajs.co/api/v1/products/${id}`;
-      }
-  
-      fetch(url)
-        .then((res) => res.json())
-        .then((data) => setProduct(data))
-        .catch((err) => console.error(err));
-    }, [id, source]);
-    if (!product) return <h2 className="text-center mt-20 text-xl font-semibold">Loading...</h2>;
+  useEffect(() => {
+    let url = "";
+
+    if (source === "dummyjson") {
+      url = `https://dummyjson.com/products/${id}`;
+    } else {
+      url = `https://api.escuelajs.co/api/v1/products/${id}`;
+    }
+
+    fetch(url)
+      .then((res) => res.json())
+      .then((data) => setProduct(data))
+      .catch((err) => console.error(err));
+  }, [id, source]);
+  if (!product) return <h2 className="text-center mt-20 text-xl font-semibold">Loading...</h2>;
 
   const handleAddToCart = () => {
-      if (!selectedSize) {
-        alert("Please select a size");
-        return;
-      }
-      dispatch(
-        addCart({
-          id: product.id,
-          name: product.title,
-          price: product.price,
-          img: product.images[0],
-          size: selectedSize,
-        })
-      );
-    };
+    if (!selectedSize) {
+      alert("Please select a size");
+      return;
+    }
+    dispatch(
+      addCart({
+        id: product.id,
+        name: product.title,
+        price: product.price,
+        img: product.images[0],
+        size: selectedSize,
+      })
+    );
+  };
 
   return (
     <div className="flex flex-col md:flex-row items-start p-4 sm:p-6 md:p-8 lg:p-12 max-w-7xl mx-auto gap-10">
@@ -95,9 +95,7 @@ const Details = () => {
         <p className="text-2xl font-semibold text-gray-800">{product.price}</p>
 
         {/* Description */}
-        <p className="text-gray-600 leading-relaxed text-sm sm:text-base">
-          This is a high-quality product designed for comfort and style. Perfect for your daily wear.
-        </p>
+
 
         {/* Buttons */}
         <div className="flex flex-wrap gap-4 sm:gap-6">
@@ -132,6 +130,15 @@ const Details = () => {
             </svg>
             Wishlist
           </button>
+
+          <p className="text-gray-600 leading-relaxed text-sm sm:text-base">
+            🚚 Delivered in 3–5 business days<br />
+
+            🔄 7-day easy returns<br />
+
+            🔒 Secure checkout
+          </p>
+          
         </div>
 
         {/* Divider */}
@@ -141,20 +148,20 @@ const Details = () => {
         <div>
           <h1 className="text-xl sm:text-2xl mb-2 font-medium">Product Details</h1>
 
-          
+
           <p className="text-gray-600 mb-3">{product.description}</p>
 
-          
 
-          
-          
 
-          
 
-          
+
+
+
+
+
         </div>
 
-      
+
 
         {/* Ratings Section */}
         <div className="ratings">
